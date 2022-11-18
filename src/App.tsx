@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, { type PropsWithChildren } from 'react';
+import React, { useEffect, type PropsWithChildren } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 
 import {
@@ -18,6 +18,7 @@ import {
 	LearnMoreLinks,
 	ReloadInstructions
 } from 'react-native/Libraries/NewAppScreen';
+import { NetworkClient } from './networking/NetworkClient';
 
 const Section: React.FC<
 	PropsWithChildren<{
@@ -51,12 +52,25 @@ const Section: React.FC<
 	);
 };
 
+type RandomCardData = {
+	name: string;
+};
+
 const App = () => {
 	const isDarkMode = useColorScheme() === 'dark';
 
 	const backgroundStyle = {
 		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
 	};
+
+	useEffect(() => {
+		const getRandomCard = async () => {
+			const response = await NetworkClient.get<RandomCardData>('/cards/random');
+			console.log(response.data?.name);
+		};
+
+		getRandomCard();
+	}, []);
 
 	return (
 		<SafeAreaView style={backgroundStyle}>
