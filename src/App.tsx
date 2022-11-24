@@ -8,47 +8,48 @@
  * @format
  */
 
-import React, { useEffect, type PropsWithChildren } from 'react';
-import {
-	SafeAreaView,
-	ScrollView,
-	StatusBar,
-	StyleSheet,
-	Text,
-	useColorScheme,
-	View,
-	Button,
-	Image
-} from 'react-native';
+import React, { useEffect } from 'react';
+import { Button, Image, SafeAreaView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 
-import {
-	Colors,
-	DebugInstructions,
-	Header,
-	LearnMoreLinks,
-	ReloadInstructions
-} from 'react-native/Libraries/NewAppScreen';
-import { NetworkClient } from './networking/NetworkClient';
-import { StoreProvider, useCardStore } from './store/StoreProvider';
 import { observer } from 'mobx-react-lite';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { StoreProvider, useCardStore } from './store/StoreProvider';
+import { AppBootstrapperProvider, useAppBootstrapper } from './bootstrapper/AppBoostrapperProvider';
 
 const App = () => {
+	return (
+		<AppBootstrapperProvider>
+			<StoreProvider>
+				<MainApp />
+			</StoreProvider>
+		</AppBootstrapperProvider>
+	);
+};
+
+const MainApp = () => {
+	const { bootstrappingFinished } = useAppBootstrapper();
 	const isDarkMode = useColorScheme() === 'dark';
+
+	if (!bootstrappingFinished) {
+		return (
+			<View style={styles.loadingContainer}>
+				<Text>Loading...</Text>
+			</View>
+		);
+	}
 
 	const backgroundStyle = {
 		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
 	};
 
 	return (
-		<StoreProvider>
-			<SafeAreaView style={backgroundStyle}>
-				<StatusBar
-					barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-					backgroundColor={backgroundStyle.backgroundColor}
-				/>
-				<RandomCardScreen />
-			</SafeAreaView>
-		</StoreProvider>
+		<SafeAreaView style={backgroundStyle}>
+			<StatusBar
+				barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+				backgroundColor={backgroundStyle.backgroundColor}
+			/>
+			<RandomCardScreen />
+		</SafeAreaView>
 	);
 };
 
@@ -58,11 +59,6 @@ const RandomCardScreen = observer(() => {
 	useEffect(() => {
 		store.loadNextRandomCard();
 	}, [store]);
-
-	const isDarkMode = useColorScheme() === 'dark';
-	const backgroundStyle = {
-		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
-	};
 
 	return (
 		<View style={styles.container}>
@@ -80,6 +76,11 @@ const RandomCardScreen = observer(() => {
 });
 
 const styles = StyleSheet.create({
+	loadingContainer: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
 	container: {
 		width: '100%',
 		height: '100%'
