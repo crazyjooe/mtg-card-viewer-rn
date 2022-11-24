@@ -1,31 +1,41 @@
 import * as React from 'react';
-import { MtgStore, defaultMtgStore } from './MtgStore';
+import { MtgStore, defaultMtgStore } from './cards/MtgStore';
 
 export type Store = {
 	cardStore: MtgStore;
 };
 
 interface StoreContext {
-	cardStore: MtgStore | null;
+	store: Store | null;
 }
 
 const DefaultStoreContext = React.createContext<StoreContext>({
-	cardStore: null
+	store: null
 });
 
-export const useCardStore = (): MtgStore => {
-	const { cardStore } = React.useContext(DefaultStoreContext);
+export const useStore = (): Store => {
+	const { store } = React.useContext(DefaultStoreContext);
 
-	if (!cardStore) {
+	if (!store) {
 		throw new Error('Store not initialized');
 	}
 
-	return cardStore;
+	return store;
+};
+
+export const useCardStore = (): MtgStore => {
+	const { store } = React.useContext(DefaultStoreContext);
+
+	if (!store) {
+		throw new Error('Store not initialized');
+	}
+
+	return store.cardStore;
 };
 
 export const StoreProvider = (props: { store?: Store; children: React.ReactNode }): JSX.Element => {
 	return (
-		<DefaultStoreContext.Provider value={{ cardStore: props.store?.cardStore ?? defaultMtgStore() }}>
+		<DefaultStoreContext.Provider value={{ store: props.store ?? { cardStore: defaultMtgStore() } }}>
 			{props.children}
 		</DefaultStoreContext.Provider>
 	);

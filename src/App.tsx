@@ -1,27 +1,16 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React, { useEffect } from 'react';
 import { Button, Image, SafeAreaView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 
 import { observer } from 'mobx-react-lite';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { StoreProvider, useCardStore } from './store/StoreProvider';
+import { useCardStore } from './store/StoreProvider';
 import { AppBootstrapperProvider, useAppBootstrapper } from './bootstrapper/AppBoostrapperProvider';
+import { AppBootstrappedProviders } from './bootstrapper/AppBootstrappedProviders';
 
 const App = () => {
 	return (
 		<AppBootstrapperProvider>
-			<StoreProvider>
-				<MainApp />
-			</StoreProvider>
+			<MainApp />
 		</AppBootstrapperProvider>
 	);
 };
@@ -43,13 +32,15 @@ const MainApp = () => {
 	};
 
 	return (
-		<SafeAreaView style={backgroundStyle}>
-			<StatusBar
-				barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-				backgroundColor={backgroundStyle.backgroundColor}
-			/>
-			<RandomCardScreen />
-		</SafeAreaView>
+		<AppBootstrappedProviders>
+			<SafeAreaView style={backgroundStyle}>
+				<StatusBar
+					barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+					backgroundColor={backgroundStyle.backgroundColor}
+				/>
+				<RandomCardScreen />
+			</SafeAreaView>
+		</AppBootstrappedProviders>
 	);
 };
 

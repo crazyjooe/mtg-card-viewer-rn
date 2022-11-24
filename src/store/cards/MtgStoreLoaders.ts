@@ -1,6 +1,6 @@
 import { cast } from 'mobx-state-tree';
 import type { Card } from './MtgStore';
-import { NetworkClient } from '../networking/NetworkClient';
+import { NetworkClient } from '../../networking/NetworkClient';
 
 export const loadRandomCard = async (): Promise<Card> => {
 	try {
