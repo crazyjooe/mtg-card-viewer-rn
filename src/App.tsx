@@ -9,7 +9,17 @@
  */
 
 import React, { useEffect, type PropsWithChildren } from 'react';
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import {
+	SafeAreaView,
+	ScrollView,
+	StatusBar,
+	StyleSheet,
+	Text,
+	useColorScheme,
+	View,
+	Button,
+	Image
+} from 'react-native';
 
 import {
 	Colors,
@@ -19,42 +29,8 @@ import {
 	ReloadInstructions
 } from 'react-native/Libraries/NewAppScreen';
 import { NetworkClient } from './networking/NetworkClient';
-
-const Section: React.FC<
-	PropsWithChildren<{
-		title: string;
-	}>
-> = ({ children, title }) => {
-	const isDarkMode = useColorScheme() === 'dark';
-	return (
-		<View style={styles.sectionContainer}>
-			<Text
-				style={[
-					styles.sectionTitle,
-					{
-						color: isDarkMode ? Colors.white : Colors.black
-					}
-				]}
-			>
-				{title}
-			</Text>
-			<Text
-				style={[
-					styles.sectionDescription,
-					{
-						color: isDarkMode ? Colors.light : Colors.dark
-					}
-				]}
-			>
-				{children}
-			</Text>
-		</View>
-	);
-};
-
-type RandomCardData = {
-	name: string;
-};
+import { StoreProvider, useCardStore } from './store/StoreProvider';
+import { observer } from 'mobx-react-lite';
 
 const App = () => {
 	const isDarkMode = useColorScheme() === 'dark';
@@ -63,47 +39,51 @@ const App = () => {
 		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
 	};
 
-	useEffect(() => {
-		const getRandomCard = async () => {
-			const response = await NetworkClient.get<RandomCardData>('/cards/random');
-			console.log(response.data?.name);
-		};
-
-		getRandomCard();
-	}, []);
-
 	return (
-		<SafeAreaView style={backgroundStyle}>
-			<StatusBar
-				barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-				backgroundColor={backgroundStyle.backgroundColor}
-			/>
-			<ScrollView contentInsetAdjustmentBehavior="automatic" style={backgroundStyle}>
-				<Header />
-				<View
-					style={{
-						backgroundColor: isDarkMode ? Colors.black : Colors.white
-					}}
-				>
-					<Section title="Step One">
-						Edit <Text style={styles.highlight}>App.tsx</Text> to change this screen and then come back to
-						see your edits.
-					</Section>
-					<Section title="See Your Changes">
-						<ReloadInstructions />
-					</Section>
-					<Section title="Debug">
-						<DebugInstructions />
-					</Section>
-					<Section title="Learn More">Read the docs to discover what to do next:</Section>
-					<LearnMoreLinks />
-				</View>
-			</ScrollView>
-		</SafeAreaView>
+		<StoreProvider>
+			<SafeAreaView style={backgroundStyle}>
+				<StatusBar
+					barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+					backgroundColor={backgroundStyle.backgroundColor}
+				/>
+				<RandomCardScreen />
+			</SafeAreaView>
+		</StoreProvider>
 	);
 };
 
+const RandomCardScreen = observer(() => {
+	const store = useCardStore();
+
+	useEffect(() => {
+		store.loadNextRandomCard();
+	}, [store]);
+
+	const isDarkMode = useColorScheme() === 'dark';
+	const backgroundStyle = {
+		backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
+	};
+
+	return (
+		<View style={styles.container}>
+			<Text>{store.randomCard.card?.name}</Text>
+			<View>
+				<Image
+					resizeMode="contain"
+					style={{ width: 300, height: 500 }}
+					source={{ uri: store.randomCard.card?.imageURL }}
+				/>
+			</View>
+			<Button title="Load Next" onPress={store.loadNextRandomCard} />
+		</View>
+	);
+});
+
 const styles = StyleSheet.create({
+	container: {
+		width: '100%',
+		height: '100%'
+	},
 	sectionContainer: {
 		marginTop: 32,
 		paddingHorizontal: 24

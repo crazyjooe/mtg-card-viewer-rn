@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MtgStore } from './MtgStore';
+import { MtgStore, defaultMtgStore } from './MtgStore';
 
 export type Store = {
 	cardStore: MtgStore;
@@ -23,9 +23,9 @@ export const useCardStore = (): MtgStore => {
 	return cardStore;
 };
 
-export const StoreProvider = (props: { store: Store; children: React.ReactNode }): JSX.Element => {
+export const StoreProvider = (props: { store?: Store; children: React.ReactNode }): JSX.Element => {
 	return (
-		<DefaultStoreContext.Provider value={{ cardStore: props.store.cardStore }}>
+		<DefaultStoreContext.Provider value={{ cardStore: props.store?.cardStore ?? defaultMtgStore() }}>
 			{props.children}
 		</DefaultStoreContext.Provider>
 	);
