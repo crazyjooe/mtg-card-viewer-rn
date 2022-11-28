@@ -47,10 +47,6 @@ const MainApp = () => {
 const RandomCardScreen = observer(() => {
 	const store = useCardStore();
 
-	useEffect(() => {
-		store.loadNextRandomCard();
-	}, [store]);
-
 	return (
 		<View style={styles.container}>
 			<Text>{store.randomCard.card?.name}</Text>

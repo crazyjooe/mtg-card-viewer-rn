@@ -23,7 +23,13 @@ export const AppBootstrapperProvider = (props: {
 }): JSX.Element => {
 	const [bootstrappingFinished, setBootstrappingFinished] = React.useState(false);
 
-	bootstrapper = props.bootstrapper ?? new AppBootstrapper({ onFinish: () => setBootstrappingFinished(true) });
+	if (props.bootstrapper) {
+		bootstrapper = props.bootstrapper;
+	} else {
+		if (!bootstrapper) {
+			bootstrapper = new AppBootstrapper({ onFinish: () => setBootstrappingFinished(true) });
+		}
+	}
 
 	return (
 		<DefaultAppBootstrapperContext.Provider value={{ appBootstrapper: bootstrapper, bootstrappingFinished }}>

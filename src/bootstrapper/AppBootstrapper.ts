@@ -1,5 +1,6 @@
-import { Store } from '../store/StoreProvider';
-import { defaultMtgStore } from '../store/cards/MtgStore';
+import { createDefaultStore } from '../store/Store';
+import { setupStore } from '../store/storeLoader';
+import type { Store } from '../store/Store';
 
 interface AppBootstrapperParams {
 	onFinish: () => void;
@@ -11,12 +12,12 @@ export class AppBootstrapper {
 
 	constructor(params: AppBootstrapperParams) {
 		this.#onFinish = params.onFinish;
-		this.#store = { cardStore: defaultMtgStore() };
-
+		this.#store = createDefaultStore();
 		this.start();
 	}
 
 	async start(): Promise<void> {
+		await setupStore(this.#store);
 		setTimeout(this.#onFinish, 1000);
 	}
 

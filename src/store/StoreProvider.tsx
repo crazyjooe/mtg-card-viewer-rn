@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { MtgStore, defaultMtgStore } from './cards/MtgStore';
-
-export type Store = {
-	cardStore: MtgStore;
-};
+import { Store } from './Store';
 
 interface StoreContext {
 	store: Store | null;

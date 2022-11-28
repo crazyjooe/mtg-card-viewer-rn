@@ -1,24 +1,25 @@
 import { flow, Instance, types } from 'mobx-state-tree';
 import { loadRandomCard } from './MtgStoreLoaders';
 
-export const CardType = types.model({
+export const CardModel = types.model('Card').props({
 	id: types.identifier,
 	name: types.string,
 	imageURL: types.maybe(types.string)
 });
 
-export type Card = Instance<typeof CardType>;
+export type Card = Instance<typeof CardModel>;
 
-export const RandomCardType = types.model({
-	card: types.maybe(types.reference(CardType)),
+export const RandomCardType = types.model('RandomCard').props({
+	card: types.maybe(types.reference(CardModel)),
 	state: types.enumeration(['empty', 'loading', 'done', 'error'])
 });
 
 export type RandomCard = Instance<typeof RandomCardType>;
 
-export const MtgStoreType = types
-	.model({
-		cards: types.array(CardType),
+export const MtgStoreModel = types
+	.model('MtgStore')
+	.props({
+		cards: types.array(CardModel),
 		randomCard: RandomCardType
 	})
 	.actions((self) => {
@@ -37,12 +38,13 @@ export const MtgStoreType = types
 		return { loadNextRandomCard };
 	});
 
-export type MtgStore = Instance<typeof MtgStoreType>;
+export type MtgStore = Instance<typeof MtgStoreModel>;
 
 export const defaultMtgStore = (): MtgStore => {
-	return MtgStoreType.create({
+	return MtgStoreModel.create({
 		cards: [],
 		randomCard: {
+			card: undefined,
 			state: 'empty'
 		}
 	});
