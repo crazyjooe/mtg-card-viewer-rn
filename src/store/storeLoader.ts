@@ -1,5 +1,5 @@
-import { applySnapshot, IDisposer, onSnapshot, getRoot } from 'mobx-state-tree';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { applySnapshot, IDisposer, onSnapshot } from 'mobx-state-tree';
 import type { Store } from './Store';
 
 const STORE_KEY = 'store_v1';
@@ -12,11 +12,12 @@ export async function setupStore(store: Store) {
 	try {
 		const storeData = await AsyncStorage.getItem(STORE_KEY);
 		if (storeData) {
+			console.log(`Found previous app state for key ${STORE_KEY}, restoring...`);
 			restoredState = JSON.parse(storeData);
 			applySnapshot(store, restoredState);
 		}
 	} catch (error) {
-		console.log('Failed to restore store state: ', error);
+		console.log('Failed to restore app state: ', error);
 	}
 
 	if (_disposer) _disposer();

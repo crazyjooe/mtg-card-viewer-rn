@@ -17,8 +17,15 @@ export class AppBootstrapper {
 	}
 
 	async start(): Promise<void> {
+		console.log('Initializing application...');
+
+		console.log('Hydrating store...');
 		await setupStore(this.#store);
+
+		console.log('Baking some cookies...');
 		setTimeout(this.#onFinish, 1000);
+
+		console.log('Application initialized!');
 	}
 
 	get store(): Store {
