@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
-
+import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react-lite';
-import { useCardStore } from './store/StoreProvider';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
 import { AppBootstrapperProvider, useAppBootstrapper } from './bootstrapper/AppBoostrapperProvider';
 import { AppBootstrappedProviders } from './bootstrapper/AppBootstrappedProviders';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { RandomCardScreen } from './screens/RandomCard/RandomCardScreen';
+import { ThemeProvider } from './ui/theme/Theme';
 import DiceIcon from './img/dice.svg';
 
 const Tab = createBottomTabNavigator();
@@ -32,7 +32,9 @@ const AppEntry = () => {
 
 	return (
 		<AppBootstrappedProviders>
-			<MainNavigation />
+			<ThemeProvider>
+				<MainNavigation />
+			</ThemeProvider>
 		</AppBootstrappedProviders>
 	);
 };
@@ -53,24 +55,6 @@ const MainNavigation = () => {
 		</NavigationContainer>
 	);
 };
-
-const RandomCardScreen = observer(() => {
-	const store = useCardStore();
-
-	return (
-		<View style={styles.container}>
-			<Text>{store.randomCard.card?.name}</Text>
-			<View>
-				<Image
-					resizeMode="contain"
-					style={{ width: 300, height: 500 }}
-					source={{ uri: store.randomCard.card?.imageURL }}
-				/>
-			</View>
-			<Button title="Load Next" onPress={store.loadNextRandomCard} />
-		</View>
-	);
-});
 
 const SetListScreen = observer(() => {
 	return (

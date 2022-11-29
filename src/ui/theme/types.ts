@@ -1,6 +1,8 @@
 import type { ViewStyle, TextStyle } from 'react-native';
 
 export type Theme = {
+	backgroundColor: string;
+	linkColor: string;
 	red: string;
 	green: string;
 	yellow: string;

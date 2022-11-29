@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useColorScheme } from 'react-native';
-import type { ThemeContextType, ThemeProviderProps, ThemedStyle, ThemedStyleParam } from './types';
-import { ThemeName } from './types';
-import LightTheme from './themes/light';
 import DarkTheme from './themes/dark';
+import LightTheme from './themes/light';
+import type { ThemeContextType, ThemedStyle, ThemedStyleParam, ThemeProviderProps } from './types';
+import { ThemeName } from './types';
 
 const DEFAULT_THEME = ThemeName.light;
 const THEMES = { light: LightTheme, dark: DarkTheme };
