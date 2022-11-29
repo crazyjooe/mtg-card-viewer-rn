@@ -11,7 +11,6 @@ export async function setupStore(store: Store) {
 
 	try {
 		const storeData = await AsyncStorage.getItem(STORE_KEY);
-		console.log(storeData);
 		if (storeData) {
 			restoredState = JSON.parse(storeData);
 			applySnapshot(store, restoredState);
