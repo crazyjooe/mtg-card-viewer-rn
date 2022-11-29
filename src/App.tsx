@@ -7,7 +7,7 @@ import { AppBootstrapperProvider, useAppBootstrapper } from './bootstrapper/AppB
 import { AppBootstrappedProviders } from './bootstrapper/AppBootstrappedProviders';
 import { RandomCardScreen } from './screens/RandomCard/RandomCardScreen';
 import { ThemeProvider } from './ui/theme/Theme';
-import DiceIcon from './img/dice.svg';
+import DiceIcon from '../img/dice.svg';
 
 const Tab = createBottomTabNavigator();
 
