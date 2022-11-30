@@ -1,4 +1,4 @@
-name: PR validation
+name: Tests
 
 on:
   push:
@@ -6,9 +6,8 @@ on:
       - main
 jobs:
   validation:
-    name: Tests
-    runs-on: ubuntu
-    timeout-minutes: 10
+    name: Main branch check
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
