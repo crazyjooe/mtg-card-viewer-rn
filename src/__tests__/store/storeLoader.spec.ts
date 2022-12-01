@@ -33,8 +33,6 @@ describe('setupStore', () => {
 		it('should apply stored snapshot correctly', async () => {
 			await setupStore(testStore, 'test_store_key');
 
-			console.log(getSnapshot(testStore));
-
 			expect(getSnapshot(testStore)).toEqual({
 				cardStore: { cards: [], randomCard: { card: undefined, state: 'done' } }
 			});
