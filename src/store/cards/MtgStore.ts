@@ -1,5 +1,5 @@
 import { flow, Instance, types } from 'mobx-state-tree';
-import { loadRandomCard } from './MtgStoreLoaders';
+import { loadRandomCard, loadSetList } from './MtgStoreLoaders';
 
 export const CardModel = types.model('Card').props({
 	id: types.identifier,
@@ -7,19 +7,32 @@ export const CardModel = types.model('Card').props({
 	imageURL: types.maybe(types.string)
 });
 
-export type Card = Instance<typeof CardModel>;
-
 export const RandomCardType = types.model('RandomCard').props({
 	card: types.maybe(types.reference(CardModel)),
 	state: types.enumeration(['empty', 'loading', 'done', 'error'])
 });
 
-export type RandomCard = Instance<typeof RandomCardType>;
+export const CardSetModel = types.model('Set').props({
+	id: types.identifier,
+	name: types.string,
+	code: types.string,
+	cardCount: types.number,
+	iconURL: types.maybe(types.string),
+	releaseDate: types.string,
+	cards: types.array(types.reference(CardModel))
+});
+
+export const SetListModel = types.model('SetList').props({
+	sets: types.array(types.reference(CardSetModel)),
+	state: types.enumeration(['empty', 'loading', 'done', 'error'])
+});
 
 export const MtgStoreModel = types
 	.model('MtgStore')
 	.props({
 		cards: types.array(CardModel),
+		sets: types.array(CardSetModel),
+		setList: SetListModel,
 		randomCard: RandomCardType
 	})
 	.actions((self) => {
@@ -35,16 +48,42 @@ export const MtgStoreModel = types
 				self.randomCard.state = 'error';
 			}
 		});
-		return { loadNextRandomCard };
+
+		const loadSets = flow(function* () {
+			self.setList.state = 'loading';
+			try {
+				const sets = yield loadSetList();
+				self.sets.clear();
+				self.sets.push(...sets);
+				self.setList.sets.clear();
+				sets.forEach((element: CardSet) => {
+					self.setList.sets.push(element.id);
+				});
+				self.setList.state = 'done';
+			} catch (error) {
+				console.error(error);
+				self.setList.state = 'error';
+			}
+		});
+		return { loadNextRandomCard, loadSets };
 	});
 
+export type Card = Instance<typeof CardModel>;
 export type MtgStore = Instance<typeof MtgStoreModel>;
+export type RandomCard = Instance<typeof RandomCardType>;
+export type CardSet = Instance<typeof CardSetModel>;
+export type SetList = Instance<typeof SetListModel>;
 
 export const defaultMtgStore = (): MtgStore => {
 	return MtgStoreModel.create({
 		cards: [],
+		sets: [],
 		randomCard: {
 			card: undefined,
+			state: 'empty'
+		},
+		setList: {
+			sets: [],
 			state: 'empty'
 		}
 	});

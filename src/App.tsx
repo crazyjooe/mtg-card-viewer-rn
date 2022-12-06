@@ -1,13 +1,13 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { observer } from 'mobx-react-lite';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import DiceIcon from '../img/dice.svg';
 import { AppBootstrapperProvider, useAppBootstrapper } from './bootstrapper/AppBoostrapperProvider';
 import { AppBootstrappedProviders } from './bootstrapper/AppBootstrappedProviders';
 import { RandomCardScreen } from './screens/RandomCard/RandomCardScreen';
+import { SetListScreen } from './screens/SetList/SetListScreen';
 import { ThemeProvider } from './ui/theme/Theme';
-import DiceIcon from '../img/dice.svg';
 
 const Tab = createBottomTabNavigator();
 
@@ -55,14 +55,6 @@ const MainNavigation = () => {
 		</NavigationContainer>
 	);
 };
-
-const SetListScreen = observer(() => {
-	return (
-		<View style={styles.container}>
-			<Text>Set list screen</Text>
-		</View>
-	);
-});
 
 const styles = StyleSheet.create({
 	loadingContainer: {

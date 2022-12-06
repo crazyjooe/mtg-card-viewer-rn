@@ -26,7 +26,7 @@ describe('setupStore', () => {
 	describe('when snapshot is stored', () => {
 		beforeEach(() => {
 			jest.spyOn(AsyncStorage, 'getItem').mockResolvedValue(
-				`{"cardStore": { "cards": [], "randomCard": { "state": "done" } }}`
+				`{"cardStore": { "cards": [], "sets": [], "randomCard": { "state": "done" }, "setList": { "sets": [], "state": "done" } } }`
 			);
 		});
 
@@ -34,7 +34,12 @@ describe('setupStore', () => {
 			await setupStore(testStore, 'test_store_key');
 
 			expect(getSnapshot(testStore)).toEqual({
-				cardStore: { cards: [], randomCard: { card: undefined, state: 'done' } }
+				cardStore: {
+					cards: [],
+					sets: [],
+					randomCard: { card: undefined, state: 'done' },
+					setList: { sets: [], state: 'done' }
+				}
 			});
 		});
 	});
@@ -46,10 +51,10 @@ describe('setupStore', () => {
 			);
 		});
 
-		it('should throw', async () => {
-			expect(async () => {
-				await setupStore(testStore, 'test_store_key');
-			}).rejects.toThrow('Failed to restore');
+		it('should start with empty store', async () => {
+			await setupStore(testStore, 'test_store_key');
+
+			expect(getSnapshot(testStore)).toEqual(getSnapshot(createDefaultStore()));
 		});
 	});
 });
