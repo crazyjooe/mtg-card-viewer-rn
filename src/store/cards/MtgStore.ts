@@ -7,7 +7,7 @@ export const CardModel = types.model('Card').props({
 	imageURL: types.maybe(types.string)
 });
 
-export const RandomCardType = types.model('RandomCard').props({
+export const RandomCardModel = types.model('RandomCard').props({
 	card: types.maybe(types.reference(CardModel)),
 	state: types.enumeration(['empty', 'loading', 'done', 'error'])
 });
@@ -33,7 +33,7 @@ export const MtgStoreModel = types
 		cards: types.array(CardModel),
 		sets: types.array(CardSetModel),
 		setList: SetListModel,
-		randomCard: RandomCardType
+		randomCard: RandomCardModel
 	})
 	.actions((self) => {
 		const loadNextRandomCard = flow(function* () {
@@ -70,7 +70,7 @@ export const MtgStoreModel = types
 
 export type Card = Instance<typeof CardModel>;
 export type MtgStore = Instance<typeof MtgStoreModel>;
-export type RandomCard = Instance<typeof RandomCardType>;
+export type RandomCard = Instance<typeof RandomCardModel>;
 export type CardSet = Instance<typeof CardSetModel>;
 export type SetList = Instance<typeof SetListModel>;
 
