@@ -24,7 +24,6 @@ export async function setupStore(store: Store, store_key: string = STORE_KEY) {
 	if (_disposer) _disposer();
 
 	_disposer = onSnapshot(store, (snapshot) => {
-		console.log(snapshot);
 		AsyncStorage.setItem(store_key, JSON.stringify(snapshot));
 	});
 

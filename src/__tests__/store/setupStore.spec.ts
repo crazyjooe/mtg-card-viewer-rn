@@ -1,4 +1,4 @@
-import { setupStore } from '../../store/storeLoader';
+import { setupStore } from '../../store/setupStore';
 import { Store, createDefaultStore } from '../../store/Store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getSnapshot } from 'mobx-state-tree';

@@ -1,5 +1,5 @@
 import { createDefaultStore } from '../store/Store';
-import { setupStore } from '../store/storeLoader';
+import { setupStore } from '../store/setupStore';
 import type { Store } from '../store/Store';
 
 interface AppBootstrapperParams {
