@@ -22,10 +22,29 @@ export const CardSetModel = types.model('Set').props({
 	cards: types.array(types.reference(CardModel))
 });
 
-export const SetListModel = types.model('SetList').props({
-	sets: types.array(types.reference(CardSetModel)),
-	state: types.enumeration(['empty', 'loading', 'done', 'error'])
-});
+export const SetListModel = types
+	.model('SetList')
+	.props({
+		sets: types.array(types.reference(CardSetModel)),
+		state: types.enumeration(['empty', 'loading', 'done', 'error'])
+	})
+	.views((self) => ({
+		get setCount() {
+			return self.sets.length;
+		},
+
+		get isLoading() {
+			return self.state === 'loading';
+		},
+
+		get setsByDate() {
+			return self.sets.slice().sort((a, b) => {
+				const dateA = new Date(a.releaseDate);
+				const dateB = new Date(b.releaseDate);
+				return dateA.getTime() - dateB.getTime();
+			});
+		}
+	}));
 
 export const MtgStoreModel = types
 	.model('MtgStore')

@@ -10,3 +10,5 @@ export const createDefaultStore = () => {
 };
 
 export type Store = Instance<typeof StoreModel>;
+
+export type { Card, MtgStore, RandomCard, CardSet, SetList } from './cards/MtgStore';
